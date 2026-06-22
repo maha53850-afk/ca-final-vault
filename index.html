@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA Final Knowledge Vault</title>
+<style>
+  :root {
+    --bg-deep: #080C10;
+    --bg-surface: #0D1117;
+    --bg-card: rgba(255,255,255,0.04);
+    --bg-glass: rgba(255,255,255,0.06);
+    --bg-glass-hover: rgba(255,255,255,0.09);
+    --border-glass: rgba(255,255,255,0.10);
+    --border-glow: rgba(139,92,246,0.4);
+    --accent-violet: #8B5CF6;
+    --accent-violet-dim: rgba(139,92,246,0.15);
+    --accent-cyan: #22D3EE;
+    --accent-cyan-dim: rgba(34,211,238,0.12);
+    --accent-amber: #F59E0B;
+    --accent-amber-dim: rgba(245,158,11,0.12);
+    --accent-rose: #F43F5E;
+    --accent-rose-dim: rgba(244,63,94,0.12);
+    --accent-emerald: #10B981;
+    --accent-emerald-dim: rgba(16,185,129,0.12);
+    --accent-indigo: #6366F1;
+    --accent-indigo-dim: rgba(99,102,241,0.12);
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-muted: #475569;
+    --font-display: 'Georgia', 'Times New Roman', serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'Courier New', monospace;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── AMBIENT GLOWS ── */
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+  .glow-orb-1 { width: 600px; height: 600px; background: #8B5CF6; top: -200px; left: -100px; }
+  .glow-orb-2 { width: 500px; height: 500px; background: #22D3EE; bottom: 20%; right: -150px; }
+  .glow-orb-3 { width: 400px; height: 400px; background: #F59E0B; top: 60%; left: 30%; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,12,16,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-glass);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-brand-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition), background var(--transition);
+    letter-spacing: 0.03em;
+  }
+
+  .nav-links a:hover {
+    color: var(--text-primary);
+    background: var(--bg-glass);
+  }
+
+  .nav-cta {
+    background: var(--accent-violet) !important;
+    color: white !important;
+    font-weight: 500;
+  }
+
+  .nav-cta:hover { opacity: 0.9; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px; height: 1.5px;
+    background: var(--text-secondary);
+    border-radius: 2px;
+    transition: var(--transition);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 5rem;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-violet);
+    background: var(--accent-violet-dim);
+    border: 1px solid rgba(139,92,246,0.25);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent-violet);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    max-width: 900px;
+  }
+
+  .hero-title .word-vault {
+    background: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-secondary);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 5rem;
+  }
+
+  .btn-primary {
+    background: var(--accent-violet);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(139,92,246,0.4); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-glass);
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .btn-ghost:hover { background: var(--bg-glass); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+  /* HERO STATS BAR */
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2rem 3rem;
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xl);
+  }
+
+  .hero-stat { text-align: center; }
+
+  .hero-stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .hero-stat-num span { color: var(--accent-violet); }
+
+  .hero-stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: var(--border-glass);
+    align-self: stretch;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+
+  .section-desc {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 540px;
+    line-height: 1.7;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ── SUBJECT CARDS GRID ── */
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .subject-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: default;
+  }
+
+  .subject-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transition: opacity var(--transition);
+    opacity: 0.7;
+  }
+
+  .subject-card:hover {
+    background: var(--bg-glass-hover);
+    border-color: rgba(255,255,255,0.16);
+    transform: translateY(-4px);
+  }
+
+  .subject-card:hover::before { opacity: 1; }
+
+  /* Per-subject accent colours */
+  .card-audit::before { background: linear-gradient(90deg, var(--accent-violet), transparent); }
+  .card-fr::before    { background: linear-gradient(90deg, var(--accent-cyan), transparent); }
+  .card-afm::before   { background: linear-gradient(90deg, var(--accent-amber), transparent); }
+  .card-dt::before    { background: linear-gradient(90deg, var(--accent-emerald), transparent); }
+  .card-idt::before   { background: linear-gradient(90deg, var(--accent-rose), transparent); }
+  .card-ibs::before   { background: linear-gradient(90deg, var(--accent-indigo), transparent); }
+
+  .card-audit { --subject-color: var(--accent-violet); --subject-dim: var(--accent-violet-dim); }
+  .card-fr    { --subject-color: var(--accent-cyan);   --subject-dim: var(--accent-cyan-dim);   }
+  .card-afm   { --subject-color: var(--accent-amber);  --subject-dim: var(--accent-amber-dim);  }
+  .card-dt    { --subject-color: var(--accent-emerald); --subject-dim: var(--accent-emerald-dim);}
+  .card-idt   { --subject-color: var(--accent-rose);   --subject-dim: var(--accent-rose-dim);   }
+  .card-ibs   { --subject-color: var(--accent-indigo); --subject-dim: var(--accent-indigo-dim); }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-icon-wrap {
+    width: 48px; height: 48px;
+    background: var(--subject-dim);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .card-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--subject-color);
+    background: var(--subject-dim);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+
+  .card-name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  .card-full-name {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+  }
+
+  .topic-pill {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-glass);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.02em;
+    transition: var(--transition);
+  }
+
+  .subject-card:hover .topic-pill {
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .card-chapters {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .card-chapters strong {
+    color: var(--subject-color);
+    font-weight: 600;
+  }
+
+  .card-arrow {
+    width: 28px; height: 28px;
+    background: var(--subject-dim);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--subject-color);
+    font-size: 14px;
+    font-weight: bold;
+    transition: var(--transition);
+  }
+
+  .subject-card:hover .card-arrow { transform: translateX(3px); }
+
+  /* ── MISSION SECTION ── */
+  .mission-section { background: var(--bg-surface); }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .mission-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-card::after {
+    content: attr(data-number);
+    position: absolute;
+    bottom: -0.5rem; right: 1rem;
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .mission-card:hover { background: var(--bg-glass-hover); transform: translateY(-3px); }
+
+  .mission-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .mission-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.6rem;
+  }
+
+  .mission-body {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ── ANNUAL REPORT SECTION ── */
+  .ar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) { .ar-grid { grid-template-columns: 1fr; } }
+
+  .ar-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: var(--transition);
+  }
+
+  .ar-card:hover { border-color: rgba(255,255,255,0.16); transform: translateY(-3px); }
+
+  .ar-card-header {
+    padding: 1.5rem 1.75rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ar-company-logo {
+    width: 40px; height: 40px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .ar-company-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .ar-company-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .ar-evidence-badge {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+
+  .badge-audit { background: var(--accent-violet-dim); color: var(--accent-violet); border: 1px solid rgba(139,92,246,0.2); }
+  .badge-fr    { background: var(--accent-cyan-dim);   color: var(--accent-cyan);   border: 1px solid rgba(34,211,238,0.2); }
+  .badge-afm   { background: var(--accent-amber-dim);  color: var(--accent-amber);  border: 1px solid rgba(245,158,11,0.2); }
+
+  .ar-card-body { padding: 1.25rem 1.75rem 1.5rem; }
+
+  .ar-evidence-list { list-style: none; }
+
+  .ar-evidence-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .ar-evidence-list li:last-child { border-bottom: none; }
+
+  .ev-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .ev-dot-audit { background: var(--accent-violet); }
+  .ev-dot-fr    { background: var(--accent-cyan); }
+  .ev-dot-afm   { background: var(--accent-amber); }
+  .ev-dot-mixed { background: var(--accent-emerald); }
+
+  .ar-card-footer {
+    padding: 1rem 1.75rem;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ar-year-tag {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .ar-link {
+    font-size: 0.8rem;
+    color: var(--accent-violet);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap var(--transition);
+  }
+
+  .ar-link:hover { gap: 8px; }
+
+  /* ── AR WIDE CARD ── */
+  .ar-card-wide {
+    grid-column: 1 / -1;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 2rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    gap: 2rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    align-items: start;
+  }
+
+  .ar-card-wide .wide-divider { background: rgba(255,255,255,0.06); }
+
+  .ar-pillar-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .ar-pillar-title.audit-color { color: var(--accent-violet); }
+  .ar-pillar-title.fr-color    { color: var(--accent-cyan); }
+  .ar-pillar-title.afm-color   { color: var(--accent-amber); }
+
+  .ar-pillar-items { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .ar-pillar-item {
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .ar-pillar-item::before {
+    content: '—';
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-top: 0;
+  }
+
+  /* ── DECISION LAB ── */
+  .lab-section { background: var(--bg-surface); }
+
+  .lab-hero {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xl);
+    padding: 3rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .lab-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 0% 0%, rgba(139,92,246,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 100% 100%, rgba(34,211,238,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .lab-hero-inner { position: relative; z-index: 1; }
+
+  .lab-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-violet);
+    background: var(--accent-violet-dim);
+    border: 1px solid rgba(139,92,246,0.2);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+
+  .lab-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .lab-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .lab-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .lab-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-glass);
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .lab-feature-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .lab-cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .case-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .case-card:hover { background: var(--bg-glass-hover); transform: translateY(-3px); }
+
+  .case-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+
+  .status-live { background: rgba(16,185,129,0.12); color: var(--accent-emerald); border: 1px solid rgba(16,185,129,0.2); }
+  .status-soon { background: rgba(245,158,11,0.1); color: var(--accent-amber); border: 1px solid rgba(245,158,11,0.2); }
+  .status-plan { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--border-glass); }
+
+  .status-live::before { content: ''; width: 5px; height: 5px; background: var(--accent-emerald); border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+
+  .case-company {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  .case-type {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  .case-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .case-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .case-tag {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── STUDY TOOLS ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .tool-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: var(--transition);
+  }
+
+  .tool-card:hover { background: var(--bg-glass-hover); transform: translateY(-3px); }
+
+  .tool-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .tool-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+  }
+
+  .tool-desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border-glass);
+    background: var(--bg-surface);
+    padding: 3rem 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .footer-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .footer-tagline {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE NAV ── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px; left: 0; right: 0;
+    background: rgba(8,12,16,0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border-glass);
+    padding: 1rem 1.5rem 1.5rem;
+    z-index: 99;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: color var(--transition);
+  }
+
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { color: var(--text-primary); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .ar-card-wide { grid-template-columns: 1fr; gap: 1.5rem; }
+    .ar-card-wide .wide-divider { display: none; }
+    .stat-divider { display: none; }
+    .hero-stats { gap: 2rem; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .subjects-grid { grid-template-columns: 1fr; }
+    .hero { padding: 7rem 1.25rem 4rem; }
+    section { padding: 4rem 1.25rem; }
+    .lab-hero { padding: 2rem 1.5rem; }
+    .hero-stats { padding: 1.5rem 1.5rem; gap: 1.5rem; }
+    nav { padding: 0 1.25rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .btn-primary, .btn-ghost { justify-content: center; }
+    .mission-grid { grid-template-columns: 1fr; }
+    .lab-cases { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── DECORATIVE GRID BG ── */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+
+  /* progress bar */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan));
+    z-index: 200;
+    transition: width 0.1s linear;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- Ambient glows -->
+<div class="glow-orb glow-orb-1" aria-hidden="true"></div>
+<div class="glow-orb glow-orb-2" aria-hidden="true"></div>
+<div class="glow-orb glow-orb-3" aria-hidden="true"></div>
+
+<!-- ────────────────────────────────────────── NAV ────────────────────────────────────────── -->
+<nav role="navigation" aria-label="Main navigation">
+  <a href="#" class="nav-brand">
+    <div class="nav-brand-icon" aria-hidden="true">⚡</div>
+    Knowledge Vault
+  </a>
+
+  <ul class="nav-links" role="list">
+    <li><a href="#subjects">Subjects</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#annual-reports">Annual Reports</a></li>
+    <li><a href="#decision-lab">Decision Lab</a></li>
+    <li><a href="#tools">Study Tools</a></li>
+    <li><a href="#decision-lab" class="nav-cta">Enter Lab →</a></li>
+  </ul>
+
+  <button class="hamburger" aria-label="Toggle mobile menu" aria-expanded="false" onclick="toggleMenu(this)">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+  <a href="#subjects" onclick="closeMobileMenu()">Subjects</a>
+  <a href="#mission" onclick="closeMobileMenu()">Mission</a>
+  <a href="#annual-reports" onclick="closeMobileMenu()">Annual Reports</a>
+  <a href="#decision-lab" onclick="closeMobileMenu()">Decision Lab</a>
+  <a href="#tools" onclick="closeMobileMenu()">Study Tools</a>
+</nav>
+
+<!-- ────────────────────────────────────────── HERO ────────────────────────────────────────── -->
+<section class="hero" aria-label="Hero">
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="hero-eyebrow">CA Final · 2024–25 Attempt</div>
+
+  <h1 class="hero-title">
+    The CA Final<br>
+    <span class="word-vault">Knowledge Vault</span>
+  </h1>
+
+  <p class="hero-subtitle">
+    Not just notes — a decision-making system. Built around real cases, annual report evidence, and the professional judgment ICAI actually tests.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#subjects" class="btn-primary">Explore Subjects →</a>
+    <a href="#decision-lab" class="btn-ghost">Open Decision Lab</a>
+  </div>
+
+  <div class="hero-stats" role="region" aria-label="Platform statistics">
+    <div class="hero-stat">
+      <span class="hero-stat-num">6<span>+</span></span>
+      <span class="hero-stat-label">Subjects</span>
+    </div>
+    <div class="stat-divider" aria-hidden="true"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">40<span>+</span></span>
+      <span class="hero-stat-label">Case Studies</span>
+    </div>
+    <div class="stat-divider" aria-hidden="true"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">12<span>+</span></span>
+      <span class="hero-stat-label">Annual Reports</span>
+    </div>
+    <div class="stat-divider" aria-hidden="true"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">300<span>+</span></span>
+      <span class="hero-stat-label">Smart Notes</span>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── SUBJECTS ────────────────────────────────────────── -->
+<section id="subjects" aria-label="CA Final Subjects">
+  <div class="container">
+    <p class="section-eyebrow reveal">Six papers. One system.</p>
+    <h2 class="section-title reveal">Every subject, structured for the exam</h2>
+    <p class="section-desc reveal">Each vault is anchored to ICAI's unit structure — with real corporate evidence layered in so you learn how the law actually plays out.</p>
+
+    <div class="subjects-grid">
+
+      <!-- AUDIT -->
+      <div class="subject-card card-audit reveal">
+        <div class="card-header">
+          <div class="card-icon-wrap" aria-hidden="true">🔍</div>
+          <span class="card-tag">Paper 3</span>
+        </div>
+        <div class="card-name">Audit</div>
+        <div class="card-full-name">Advanced Auditing & Professional Ethics</div>
+        <p class="card-desc">Quality management, risk-based auditing, fraud, SAs decoded through IL&FS, Satyam, and DHFL — the way the examiner thinks.</p>
+        <div class="card-topics">
+          <span class="topic-pill">SQM 1 &amp; 2</span>
+          <span class="topic-pill">SA 315</span>
+          <span class="topic-pill">SA 700 Series</span>
+          <span class="topic-pill">CARO 2020</span>
+          <span class="topic-pill">Fraud &amp; FEMA</span>
+          <span class="topic-pill">Ethics</span>
+        </div>
+        <div class="card-meta">
+          <span class="card-chapters"><strong>8</strong> units · 45 SAs</span>
+          <div class="card-arrow" aria-hidden="true">→</div>
+        </div>
+      </div>
+
+      <!-- FR -->
+      <div class="subject-card card-fr reveal">
+        <div class="card-header">
+          <div class="card-icon-wrap" aria-hidden="true">📊</div>
+          <span class="card-tag">Paper 1</span>
+        </div>
+        <div class="card-name">FR</div>
+        <div class="card-full-name">Financial Reporting</div>
+        <p class="card-desc">Ind AS applied through annual report disclosures. Leases in Indigo, business combinations in Tata, financial instruments in HDFC Bank.</p>
+        <div class="card-topics">
+          <span class="topic-pill">Ind AS 115</span>
+          <span class="topic-pill">Ind AS 116</span>
+          <span class="topic-pill">Business Combos</span>
+          <span class="topic-pill">EPS</span>
+          <span class="topic-pill">Consolidation</span>
+          <span class="topic-pill">NBFC</span>
+        </div>
+        <div class="card-meta">
+          <span class="card-chapters"><strong>7</strong> units · 35 Ind AS</span>
+          <div class="card-arrow" aria-hidden="true">→</div>
+        </div>
+      </div>
+
+      <!-- AFM -->
+      <div class="subject-card card-afm reveal">
+        <div class="card-header">
+          <div class="card-icon-wrap" aria-hidden="true">💹</div>
+          <span class="card-tag">Paper 2</span>
+        </div>
+        <div class="card-name">AFM</div>
+        <div class="card-full-name">Advanced Financial Management</div>
+        <p class="card-desc">Valuation, capital structure, derivatives, and portfolio management — with real hedging decisions from Infosys and Wipro annual reports.</p>
+        <div class="card-topics">
+          <span class="topic-pill">Valuation</span>
+          <span class="topic-pill">Derivatives</span>
+          <span class="topic-pill">Forex</span>
+          <span class="topic-pill">M&amp;A</span>
+          <span class="topic-pill">Portfolio</span>
+          <span class="topic-pill">ESOP</span>
+        </div>
+        <div class="card-meta">
+          <span class="card-chapters"><strong>6</strong> units · 200+ sums</span>
+          <div class="card-arrow" aria-hidden="true">→</div>
+        </div>
+      </div>
+
+      <!-- DT -->
+      <div class="subject-card card-dt reveal">
+        <div class="card-header">
+          <div class="card-icon-wrap" aria-hidden="true">⚖️</div>
+          <span class="card-tag">Paper 7</span>
+        </div>
+        <div class="card-name">DT</div>
+        <div class="card-full-name">Direct Tax Laws & International Tax</div>
+        <p class="card-desc">Income tax, DTAA, transfer pricing, and GAAR — structured around landmark cases and recent amendments that the examiner keeps testing.</p>
+        <div class="card-topics">
+          <span class="topic-pill">PGBP</span>
+          <span class="topic-pill">Capital Gains</span>
+          <span class="topic-pill">Transfer Pricing</span>
+          <span class="topic-pill">DTAA</span>
+          <span class="topic-pill">GAAR</span>
+          <span class="topic-pill">TDS/TCS</span>
+        </div>
+        <div class="card-meta">
+          <span class="card-chapters"><strong>9</strong> units · AY 2025-26</span>
+          <div class="card-arrow" aria-hidden="true">→</div>
+        </div>
+      </div>
+
+      <!-- IDT -->
+      <div class="subject-card card-idt reveal">
+        <div class="card-header">
+          <div class="card-icon-wrap" aria-hidden="true">🏛️</div>
+          <span class="card-tag">Paper 8</span>
+        </div>
+        <div class="card-name">IDT</div>
+        <div class="card-full-name">Indirect Tax Laws</div>
+        <p class="card-desc">GST and Customs law decoded — ITC, place of supply, anti-profiteering, and classification disputes from real-world circulars and AAR rulings.</p>
+        <div class="card-topics">
+          <span class="topic-pill">ITC</span>
+          <span class="topic-pill">Place of Supply</span>
+          <span class="topic-pill">Valuation</span>
+          <span class="topic-pill">Customs</span>
+          <span class="topic-pill">Refunds</span>
+          <span class="topic-pill">Anti-profiteering</span>
+        </div>
+        <div class="card-meta">
+          <span class="card-chapters"><strong>8</strong> units · 2024 amendments</span>
+          <div class="card-arrow" aria-hidden="true">→</div>
+        </div>
+      </div>
+
+      <!-- IBS -->
+      <div class="subject-card card-ibs reveal">
+        <div class="card-header">
+          <div class="card-icon-wrap" aria-hidden="true">💻</div>
+          <span class="card-tag">Paper 6</span>
+        </div>
+        <div class="card-name">IBS</div>
+        <div class="card-full-name">Integrated Business Solutions</div>
+        <p class="card-desc">The multidisciplinary paper — strategic management, risk, economics, and ethics woven into scenario-based case lets. Think like a CFO, not a student.</p>
+        <div class="card-topics">
+          <span class="topic-pill">Strategic Mgmt</span>
+          <span class="topic-pill">Risk Framework</span>
+          <span class="topic-pill">Economics</span>
+          <span class="topic-pill">Case Analysis</span>
+          <span class="topic-pill">Ethics</span>
+          <span class="topic-pill">Governance</span>
+        </div>
+        <div class="card-meta">
+          <span class="card-chapters"><strong>5</strong> modules · Case-based</span>
+          <div class="card-arrow" aria-hidden="true">→</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── MISSION ────────────────────────────────────────── -->
+<section id="mission" class="mission-section" aria-label="Platform mission">
+  <div class="container">
+    <p class="section-eyebrow reveal">Why this exists</p>
+    <h2 class="section-title reveal">Built on a simple observation</h2>
+    <p class="section-desc reveal">CA Final students don't fail because they don't know concepts. They fail because they can't apply them under exam conditions the way ICAI expects.</p>
+
+    <div class="mission-grid">
+      <div class="mission-card reveal" data-number="1">
+        <div class="mission-icon" aria-hidden="true">🎯</div>
+        <h3 class="mission-title">Decision-making over definitions</h3>
+        <p class="mission-body">ICAI doesn't ask "what is materiality." It gives you a scenario and asks you to decide. Every note here is written as a decision framework, not a definition.</p>
+      </div>
+      <div class="mission-card reveal" data-number="2">
+        <div class="mission-icon" aria-hidden="true">🏢</div>
+        <h3 class="mission-title">Real companies, real evidence</h3>
+        <p class="mission-body">Each standard and provision is anchored to an actual annual report. You'll see how Ind AS 116 looks in IndiGo's books, not just in an example problem.</p>
+      </div>
+      <div class="mission-card reveal" data-number="3">
+        <div class="mission-icon" aria-hidden="true">📝</div>
+        <h3 class="mission-title">Exam-writing as a skill</h3>
+        <p class="mission-body">Professional writing under ICAI standards is a craft. The vault trains you on answer structure, presentation marks, and the language the examiner expects to see.</p>
+      </div>
+      <div class="mission-card reveal" data-number="4">
+        <div class="mission-icon" aria-hidden="true">🧩</div>
+        <h3 class="mission-title">Cross-subject integration</h3>
+        <p class="mission-body">An IL&FS case touches Audit (SA 570), FR (going concern), and DT (CARO) simultaneously. The vault is designed to show those connections, not hide them.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── ANNUAL REPORTS ────────────────────────────────────────── -->
+<section id="annual-reports" aria-label="Annual Report Evidence section">
+  <div class="container">
+    <p class="section-eyebrow reveal">Annual Report Evidence</p>
+    <h2 class="section-title reveal">Standards live in financial statements</h2>
+    <p class="section-desc reveal">Every major topic is grounded in how listed companies actually apply the law. These are the reports we've dissected — and what you'll learn from each one.</p>
+
+    <div class="ar-grid">
+
+      <!-- IL&FS -->
+      <div class="ar-card reveal">
+        <div class="ar-card-header">
+          <div class="ar-company-logo" aria-hidden="true">🏗️</div>
+          <div>
+            <div class="ar-company-name">IL&FS Group</div>
+            <div class="ar-company-meta">Infrastructure Leasing & Financial Services</div>
+          </div>
+          <span class="ar-evidence-badge badge-audit">Audit</span>
+        </div>
+        <div class="ar-card-body">
+          <ul class="ar-evidence-list" aria-label="Evidence from IL&FS annual report">
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>SA 570 Going concern — auditor's obligations when a company collapses</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>SQM 2 engagement quality — why the review failed at the firm level</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Related party transactions and auditor independence conflicts</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Fraudulent financial reporting vs. error — SA 240 applied</li>
+          </ul>
+        </div>
+        <div class="ar-card-footer">
+          <span class="ar-year-tag">FY 2017–18 · Collapse 2018</span>
+          <a href="#decision-lab" class="ar-link">View Detective Case →</a>
+        </div>
+      </div>
+
+      <!-- COFFEE DAY -->
+      <div class="ar-card reveal">
+        <div class="ar-card-header">
+          <div class="ar-company-logo" aria-hidden="true">☕</div>
+          <div>
+            <div class="ar-company-name">Coffee Day Enterprises</div>
+            <div class="ar-company-meta">CDEL · NSE Listed</div>
+          </div>
+          <span class="ar-evidence-badge badge-audit">Audit</span>
+        </div>
+        <div class="ar-card-body">
+          <ul class="ar-evidence-list" aria-label="Evidence from Coffee Day annual report">
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Undisclosed promoter liabilities — SA 250 laws &amp; regulations</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Audit of estimates — when management hides real debt positions</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Subsequent events (SA 560) — death of promoter and disclosure</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Emphasis of matter vs. modified opinion decision tree</li>
+          </ul>
+        </div>
+        <div class="ar-card-footer">
+          <span class="ar-year-tag">FY 2018–19 · Siddhartha case</span>
+          <a href="#decision-lab" class="ar-link">View Detective Case →</a>
+        </div>
+      </div>
+
+      <!-- DHFL -->
+      <div class="ar-card reveal">
+        <div class="ar-card-header">
+          <div class="ar-company-logo" aria-hidden="true">🏠</div>
+          <div>
+            <div class="ar-company-name">DHFL</div>
+            <div class="ar-company-meta">Dewan Housing Finance Corporation</div>
+          </div>
+          <span class="ar-evidence-badge badge-fr">FR + Audit</span>
+        </div>
+        <div class="ar-card-body">
+          <ul class="ar-evidence-list" aria-label="Evidence from DHFL annual report">
+            <li><span class="ev-dot ev-dot-fr" aria-hidden="true"></span>Ind AS 109 — classification and impairment of housing loans (ECL)</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Forensic audit findings — difference from statutory audit scope</li>
+            <li><span class="ev-dot ev-dot-fr" aria-hidden="true"></span>Securitisation and derecognition of financial assets under Ind AS</li>
+            <li><span class="ev-dot ev-dot-audit" aria-hidden="true"></span>Auditor resignation — obligations under SA 705A and SQM</li>
+          </ul>
+        </div>
+        <div class="ar-card-footer">
+          <span class="ar-year-tag">FY 2018–19 · NCLT Resolution 2021</span>
+          <a href="#decision-lab" class="ar-link">View Detective Case →</a>
+        </div>
+      </div>
+
+      <!-- INFOSYS -->
+      <div class="ar-card reveal">
+        <div class="ar-card-header">
+          <div class="ar-company-logo" aria-hidden="true">🖥️</div>
+          <div>
+            <div class="ar-company-name">Infosys</div>
+            <div class="ar-company-meta">NSE: INFY · IT Services</div>
+          </div>
+          <span class="ar-evidence-badge badge-afm">AFM + FR</span>
+        </div>
+        <div class="ar-card-body">
+          <ul class="ar-evidence-list" aria-label="Evidence from Infosys annual report">
+            <li><span class="ev-dot ev-dot-fr" aria-hidden="true"></span>Ind AS 115 — revenue recognition across long-term IT contracts</li>
+            <li><span class="ev-dot ev-dot-fr" aria-hidden="true"></span>Hedging disclosures — cash flow hedges on USD receivables</li>
+            <li><span class="ev-dot ev-dot-fr" aria-hidden="true"></span>ESOP accounting under Ind AS 102 — grant date fair value</li>
+            <li><span class="ev-dot ev-dot-fr" aria-hidden="true"></span>Segment reporting and geographical disaggregation</li>
+          </ul>
+        </div>
+        <div class="ar-card-footer">
+          <span class="ar-year-tag">FY 2023–24 Annual Report</span>
+          <a href="#annual-reports" class="ar-link">View Evidence Map →</a>
+        </div>
+      </div>
+
+      <!-- WIDE CARD: What Every Report Teaches -->
+      <div class="ar-card-wide reveal" aria-label="Cross-subject evidence map">
+        <div>
+          <div class="ar-pillar-title audit-color">What Audit learns</div>
+          <div class="ar-pillar-items">
+            <div class="ar-pillar-item">Going concern, modified opinions, and key audit matters — live in Big 4 signed reports</div>
+            <div class="ar-pillar-item">SQM 2 engagement quality documented through post-collapse regulatory orders</div>
+            <div class="ar-pillar-item">CARO 2020 reporting requirements visible in statutory audit reports</div>
+            <div class="ar-pillar-item">Emphasis of matter paragraphs — what triggers them vs. a qualification</div>
+          </div>
+        </div>
+        <div class="wide-divider" aria-hidden="true"></div>
+        <div>
+          <div class="ar-pillar-title fr-color">What FR learns</div>
+          <div class="ar-pillar-items">
+            <div class="ar-pillar-item">Ind AS 116 lease disclosures — ROU asset and lease liability in IndiGo balance sheets</div>
+            <div class="ar-pillar-item">ECL provisioning methodology as disclosed in bank financial statements</div>
+            <div class="ar-pillar-item">Business combination accounting — goodwill, fair value step-up, NCI options</div>
+            <div class="ar-pillar-item">Ind AS 115 performance obligation identification in tech and infra contracts</div>
+          </div>
+        </div>
+        <div class="wide-divider" aria-hidden="true"></div>
+        <div>
+          <div class="ar-pillar-title afm-color">What AFM learns</div>
+          <div class="ar-pillar-items">
+            <div class="ar-pillar-item">Hedging strategies and hedge effectiveness testing in IT company treasury notes</div>
+            <div class="ar-pillar-item">Capital allocation decisions — buybacks, dividends, and retained earnings trends</div>
+            <div class="ar-pillar-item">Debt structuring and covenant disclosures in infrastructure company reports</div>
+            <div class="ar-pillar-item">Valuation multiples applied in actual M&A transactions disclosed in notes</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── DECISION LAB ────────────────────────────────────────── -->
+<section id="decision-lab" class="lab-section" aria-label="CA Final Decision Lab">
+  <div class="container">
+    <div class="lab-hero reveal">
+      <div class="lab-hero-inner">
+        <div class="lab-label">🧪 Decision Lab — Beta</div>
+        <h2 class="lab-title">Audit like a partner.<br>Not a student.</h2>
+        <p class="lab-desc">Real case documents. You read them, identify the issues, and draft a professional response — the same way the ICAI examiner expects you to in a 3-hour paper. No hints. No MCQs. Just judgment.</p>
+
+        <div class="lab-features">
+          <div class="lab-feature">
+            <div class="lab-feature-dot" style="background: var(--accent-emerald);" aria-hidden="true"></div>
+            Detective Case format
+          </div>
+          <div class="lab-feature">
+            <div class="lab-feature-dot" style="background: var(--accent-violet);" aria-hidden="true"></div>
+            Structured answer marking
+          </div>
+          <div class="lab-feature">
+            <div class="lab-feature-dot" style="background: var(--accent-cyan);" aria-hidden="true"></div>
+            Real corporate documents
+          </div>
+          <div class="lab-feature">
+            <div class="lab-feature-dot" style="background: var(--accent-amber);" aria-hidden="true"></div>
+            Past paper alignment
+          </div>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 0;">
+          <a href="#decision-lab" class="btn-primary">Start IL&FS Case →</a>
+          <a href="#decision-lab" class="btn-ghost">View All Cases</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-cases">
+
+      <div class="case-card reveal">
+        <div class="case-status status-live">Live now</div>
+        <div class="case-company">IL&FS Group</div>
+        <div class="case-type">Audit · Quality Management</div>
+        <p class="case-desc">Read the actual audit committee report, identify the going concern red flags, and explain what the engagement partner should have done differently under SQM 2.</p>
+        <div class="case-tags">
+          <span class="case-tag">SA 570</span>
+          <span class="case-tag">SQM 2</span>
+          <span class="case-tag">SA 240</span>
+          <span class="case-tag">Going Concern</span>
+        </div>
+      </div>
+
+      <div class="case-card reveal">
+        <div class="case-status status-soon">Coming soon</div>
+        <div class="case-company">Coffee Day Enterprises</div>
+        <div class="case-type">Audit · Reporting Decisions</div>
+        <p class="case-desc">VG Siddhartha's letter surfaces. What does the auditor do next? Draft the modified opinion paragraph, decide on emphasis of matter vs. qualified opinion.</p>
+        <div class="case-tags">
+          <span class="case-tag">SA 705</span>
+          <span class="case-tag">SA 560</span>
+          <span class="case-tag">SA 250</span>
+          <span class="case-tag">Ethics</span>
+        </div>
+      </div>
+
+      <div class="case-card reveal">
+        <div class="case-status status-soon">Coming soon</div>
+        <div class="case-company">DHFL</div>
+        <div class="case-type">FR + Audit · Financial Instruments</div>
+        <p class="case-desc">Classify DHFL's housing loan portfolio under Ind AS 109. Calculate ECL provision. Determine whether the auditor's going concern conclusion was defensible.</p>
+        <div class="case-tags">
+          <span class="case-tag">Ind AS 109</span>
+          <span class="case-tag">ECL</span>
+          <span class="case-tag">SA 570</span>
+          <span class="case-tag">Derecognition</span>
+        </div>
+      </div>
+
+      <div class="case-card reveal">
+        <div class="case-status status-plan">Planned</div>
+        <div class="case-company">Infosys</div>
+        <div class="case-type">FR · Revenue Recognition</div>
+        <p class="case-desc">Disaggregate Infosys revenue by performance obligation, apply Ind AS 115 variable consideration guidance, and assess the hedge accounting disclosures.</p>
+        <div class="case-tags">
+          <span class="case-tag">Ind AS 115</span>
+          <span class="case-tag">Variable Consideration</span>
+          <span class="case-tag">Hedging</span>
+        </div>
+      </div>
+
+      <div class="case-card reveal">
+        <div class="case-status status-plan">Planned</div>
+        <div class="case-company">Byju's</div>
+        <div class="case-type">Audit · Startup Governance</div>
+        <p class="case-desc">Auditor resignation, delayed financials, related party loans — map every red flag to a specific SA and explain how an effective audit committee should have responded.</p>
+        <div class="case-tags">
+          <span class="case-tag">SA 260</span>
+          <span class="case-tag">SA 315</span>
+          <span class="case-tag">CARO</span>
+          <span class="case-tag">Governance</span>
+        </div>
+      </div>
+
+      <div class="case-card reveal">
+        <div class="case-status status-plan">Planned</div>
+        <div class="case-company">Yes Bank</div>
+        <div class="case-type">DT + FR · Restructuring</div>
+        <p class="case-desc">Analyse the AT1 bond write-down — Ind AS 32/109 classification, tax treatment of the loss, and whether the auditor's key audit matter disclosure was adequate.</p>
+        <div class="case-tags">
+          <span class="case-tag">Ind AS 32</span>
+          <span class="case-tag">Section 72A</span>
+          <span class="case-tag">AT1 Bonds</span>
+          <span class="case-tag">KAM</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── STUDY TOOLS ────────────────────────────────────────── -->
+<section id="tools" aria-label="Study tools">
+  <div class="container">
+    <p class="section-eyebrow reveal">Inside the vault</p>
+    <h2 class="section-title reveal">Everything the exam needs</h2>
+    <p class="section-desc reveal">Not a dump of PDFs. A curated system where every tool has one job and does it well.</p>
+
+    <div class="tools-grid">
+      <div class="tool-card reveal">
+        <span class="tool-icon" aria-hidden="true">🧠</span>
+        <div class="tool-name">Smart Notes</div>
+        <p class="tool-desc">Decision-framework notes anchored to real corporate examples — not textbook definitions.</p>
+      </div>
+      <div class="tool-card reveal">
+        <span class="tool-icon" aria-hidden="true">🕵️</span>
+        <div class="tool-name">Detective Cases</div>
+        <p class="tool-desc">Real case documents where you identify issues and draft answers before seeing the model solution.</p>
+      </div>
+      <div class="tool-card reveal">
+        <span class="tool-icon" aria-hidden="true">📋</span>
+        <div class="tool-name">Past Paper Bank</div>
+        <p class="tool-desc">Every ICAI past question, organised by unit, topic, and standard — not by year.</p>
+      </div>
+      <div class="tool-card reveal">
+        <span class="tool-icon" aria-hidden="true">⚡</span>
+        <div class="tool-name">Revision Mode</div>
+        <p class="tool-desc">High-frequency, high-yield summaries built for the 48 hours before the exam.</p>
+      </div>
+      <div class="tool-card reveal">
+        <span class="tool-icon" aria-hidden="true">🗺️</span>
+        <div class="tool-name">Evidence Maps</div>
+        <p class="tool-desc">See which annual report proves which standard — a cross-reference you'll use constantly.</p>
+      </div>
+      <div class="tool-card reveal">
+        <span class="tool-icon" aria-hidden="true">✍️</span>
+        <div class="tool-name">Answer Templates</div>
+        <p class="tool-desc">Structured formats for every question type the examiner sets — from memos to opinions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── FOOTER ────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-icon" aria-hidden="true">⚡</div>
+      CA Final Knowledge Vault
+    </div>
+    <p class="footer-tagline">"The exam tests judgment. The vault builds it."</p>
+    <p class="footer-copy">Built for CA Final · 2024–25 Attempt</p>
+  </div>
+</footer>
+
+<script>
+  /* ── MOBILE MENU ── */
+  function toggleMenu(btn) {
+    const menu = document.getElementById('mobile-menu');
+    const isOpen = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+    document.querySelector('.hamburger').setAttribute('aria-expanded', false);
+  }
+
+  /* ── SCROLL PROGRESS ── */
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (scrolled / total * 100) + '%';
+  }, { passive: true });
+
+  /* ── INTERSECTION OBSERVER REVEAL ── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => observer.observe(el));
+
+  /* ── STAGGER GRID CHILDREN ── */
+  document.querySelectorAll('.subjects-grid, .mission-grid, .lab-cases, .tools-grid').forEach(grid => {
+    grid.querySelectorAll('.reveal').forEach((card, i) => {
+      card.style.transitionDelay = (i * 0.07) + 's';
+    });
+  });
+
+  /* ── SMOOTH CLOSE NAV ON OUTSIDE CLICK ── */
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('mobile-menu');
+    const hamburger = document.querySelector('.hamburger');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !hamburger.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+
+  /* ── RESPECT REDUCED MOTION ── */
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.reveal').forEach(el => {
+      el.style.transition = 'none';
+      el.classList.add('visible');
+    });
+  }
+</script>
+</body>
+</html>
